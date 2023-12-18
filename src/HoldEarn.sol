@@ -13,7 +13,7 @@
  *  burn fee and only redistributes tokens to holders.
  */
 
-pragma solidity 0.8.20;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -43,7 +43,7 @@ contract HoldEarn is Context, IERC20, IERC20Metadata, Ownable {
     constructor(address owner_) Ownable(msg.sender) {
         _name = "HOLD";
         _symbol = "EARN";
-        _tTotalSupply = 1000000000 * 10 ** decimals();
+        _tTotalSupply = 1_000_000_000 * 10 ** decimals();
         excludeFromFee(owner_);
         excludeFromFee(address(this));
         _mint(owner_, _tTotalSupply);

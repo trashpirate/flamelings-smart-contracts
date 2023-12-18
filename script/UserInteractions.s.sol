@@ -17,29 +17,29 @@ approve(address to, uint256 tokenId)
 
 */
 
-pragma solidity 0.8.18;
+pragma solidity ^0.8.20;
 
 import {Script, console} from "forge-std/Script.sol";
 import {DevOpsTools} from "foundry-devops/src/DevOpsTools.sol";
-import {Venus} from "../src/Venus.sol";
+import {Flamelings} from "../src/Flamelings.sol";
 
 contract MintNfts is Script {
     function mintSingleNft(address recentContractAddress) public {
         vm.startBroadcast();
-        Venus(recentContractAddress).mint(1);
+        Flamelings(recentContractAddress).mint(1);
         vm.stopBroadcast();
         console.log("Minted 1 NFT with:", msg.sender);
     }
 
     function mintMultipleNfts(address recentContractAddress) public {
         vm.startBroadcast();
-        Venus(recentContractAddress).mint(3);
+        Flamelings(recentContractAddress).mint(3);
         vm.stopBroadcast();
         console.log("Minted 3 NFT with:", msg.sender);
     }
 
     function run() external {
-        address recentContractAddress = DevOpsTools.get_most_recent_deployment("Venus", block.chainid);
+        address recentContractAddress = DevOpsTools.get_most_recent_deployment("Flamelings", block.chainid);
         mintSingleNft(recentContractAddress);
         mintMultipleNfts(recentContractAddress);
     }
@@ -50,12 +50,12 @@ contract TransferNft is Script {
 
     function transferNft(address recentContractAddress) public {
         vm.startBroadcast();
-        Venus(recentContractAddress).transferFrom(tx.origin, NEW_USER, 0);
+        Flamelings(recentContractAddress).transferFrom(tx.origin, NEW_USER, 0);
         vm.stopBroadcast();
     }
 
     function run() external {
-        address recentContractAddress = DevOpsTools.get_most_recent_deployment("Venus", block.chainid);
+        address recentContractAddress = DevOpsTools.get_most_recent_deployment("Flamelings", block.chainid);
         transferNft(recentContractAddress);
     }
 }
@@ -65,12 +65,12 @@ contract ApproveNft is Script {
 
     function approveNft(address recentContractAddress) public {
         vm.startBroadcast();
-        Venus(recentContractAddress).approve(SENDER, 0);
+        Flamelings(recentContractAddress).approve(SENDER, 0);
         vm.stopBroadcast();
     }
 
     function run() external {
-        address recentContractAddress = DevOpsTools.get_most_recent_deployment("Venus", block.chainid);
+        address recentContractAddress = DevOpsTools.get_most_recent_deployment("Flamelings", block.chainid);
         approveNft(recentContractAddress);
     }
 }

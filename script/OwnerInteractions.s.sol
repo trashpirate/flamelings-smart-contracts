@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.18;
+pragma solidity 0.8.20;
 
 import {Script, console} from "forge-std/Script.sol";
 import {DevOpsTools} from "foundry-devops/src/DevOpsTools.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {Venus} from "../src/Venus.sol";
+import {Flamelings} from "../src/Flamelings.sol";
 
 contract SetNewFee is Script {
     uint256 constant NEW_FEE = 15_000_000_000 * 10 ** 9;
@@ -16,12 +16,12 @@ contract SetNewFee is Script {
 
     function setNewFee(address recentContractAddress) public {
         vm.startBroadcast();
-        Venus(recentContractAddress).setFee(NEW_FEE);
+        Flamelings(recentContractAddress).setFee(NEW_FEE);
         vm.stopBroadcast();
     }
 
     function run() external {
-        address recentContractAddress = DevOpsTools.get_most_recent_deployment("Venus", block.chainid);
+        address recentContractAddress = DevOpsTools.get_most_recent_deployment("Flamelings", block.chainid);
         setNewFee(recentContractAddress);
     }
 }
@@ -35,12 +35,12 @@ contract SetNewFeeAddress is Script {
 
     function setNewFeeAddress(address recentContractAddress) public {
         vm.startBroadcast();
-        Venus(recentContractAddress).setFeeAddress(NEW_FEE_ADDRESS);
+        Flamelings(recentContractAddress).setFeeAddress(NEW_FEE_ADDRESS);
         vm.stopBroadcast();
     }
 
     function run() external {
-        address recentContractAddress = DevOpsTools.get_most_recent_deployment("Venus", block.chainid);
+        address recentContractAddress = DevOpsTools.get_most_recent_deployment("Flamelings", block.chainid);
 
         setNewFeeAddress(recentContractAddress);
     }
@@ -55,12 +55,12 @@ contract SetNewMaxPerWallet is Script {
 
     function setNewMaxPerWallet(address recentContractAddress) public {
         vm.startBroadcast();
-        Venus(recentContractAddress).setMaxPerWallet(NEW_MAX_PER_WALLET);
+        Flamelings(recentContractAddress).setMaxPerWallet(NEW_MAX_PER_WALLET);
         vm.stopBroadcast();
     }
 
     function run() external {
-        address recentContractAddress = DevOpsTools.get_most_recent_deployment("Venus", block.chainid);
+        address recentContractAddress = DevOpsTools.get_most_recent_deployment("Flamelings", block.chainid);
         setNewMaxPerWallet(recentContractAddress);
     }
 }
@@ -74,12 +74,12 @@ contract SetNewBatchLimit is Script {
 
     function setNewBatchLimit(address recentContractAddress) public {
         vm.startBroadcast();
-        Venus(recentContractAddress).setBatchLimit(NEW_BATCH_LIMIT);
+        Flamelings(recentContractAddress).setBatchLimit(NEW_BATCH_LIMIT);
         vm.stopBroadcast();
     }
 
     function run() external {
-        address recentContractAddress = DevOpsTools.get_most_recent_deployment("Venus", block.chainid);
+        address recentContractAddress = DevOpsTools.get_most_recent_deployment("Flamelings", block.chainid);
         setNewBatchLimit(recentContractAddress);
     }
 }
@@ -93,12 +93,14 @@ contract WithdrawTokensFromContract is Script {
 
     function withrawTokensFromContract(address recentContractAddress) public {
         vm.startBroadcast();
-        Venus(recentContractAddress).withdrawTokens(address(Venus(recentContractAddress).paymentToken()), address(this));
+        Flamelings(recentContractAddress).withdrawTokens(
+            Flamelings(recentContractAddress).getPaymentToken(), address(this)
+        );
         vm.stopBroadcast();
     }
 
     function run() external {
-        address recentContractAddress = DevOpsTools.get_most_recent_deployment("Venus", block.chainid);
+        address recentContractAddress = DevOpsTools.get_most_recent_deployment("Flamelings", block.chainid);
         withrawTokensFromContract(recentContractAddress);
     }
 }

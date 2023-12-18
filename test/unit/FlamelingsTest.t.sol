@@ -1,23 +1,23 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.18;
+pragma solidity ^0.8.20;
 
 import {Test, console} from "forge-std/Test.sol";
-import {Venus} from "../../src/Venus.sol";
-import {DeployNFTContract} from "../../script/DeployNFTContract.s.sol";
+import {Flamelings} from "../../src/Flamelings.sol";
+import {DeployFlamelings} from "../../script/DeployFlamelings.s.sol";
 import {IERC20, ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract NFTContractTest is Test {
-    Venus nfts;
+contract FlamelingsTest is Test {
+    Flamelings nfts;
     IERC20 token;
 
     address USER = makeAddr("user");
     address NEW_FEE_ADDRESS = makeAddr("fee");
     address OWNER;
-    uint256 constant STARTING_BALANCE = 100_000_000_000 * 10 ** 9;
 
-    uint256 constant INITIAL_FEE = 20_000_000_000 * 10 ** 9;
-    uint256 constant NEW_FEE = 10_000_000_000 * 10 ** 9;
+    uint256 constant STARTING_BALANCE = 500_000 * 10 ** 18;
+    uint256 constant INITIAL_FEE = 100_000 * 10 ** 18;
+    uint256 constant NEW_FEE = 200_000 * 10 ** 18;
 
     modifier funded() {
         // fund user
@@ -27,53 +27,53 @@ contract NFTContractTest is Test {
     }
 
     function setUp() external {
-        DeployNFTContract deployment = new DeployNFTContract();
+        DeployFlamelings deployment = new DeployFlamelings();
         nfts = deployment.run();
-        token = nfts.paymentToken();
+        token = IERC20(nfts.getPaymentToken());
 
         OWNER = nfts.owner();
     }
 
     function testPaymentTokenName() public {
-        address tokenAddress = address(nfts.paymentToken());
+        address tokenAddress = nfts.getPaymentToken();
         string memory symbol = ERC20(tokenAddress).symbol();
-        assertEq(symbol, "TASTE");
+        assertEq(symbol, "EARN");
     }
 
     function testNFTTokenName() public {
-        assertEq(nfts.name(), "Venus");
+        assertEq(nfts.name(), "Flamelings");
     }
 
     function testNFTTokenSymbol() public {
-        assertEq(nfts.symbol(), "VENUS");
+        assertEq(nfts.symbol(), "FLAMELING");
     }
 
     function testNFTprice() public {
-        assertEq(nfts.fee(), INITIAL_FEE);
+        assertEq(nfts.getFee(), INITIAL_FEE);
     }
 
     function testIfOwnerCanSetFee() public {
         vm.prank(OWNER);
         nfts.setFee(NEW_FEE);
-        assertEq(nfts.fee(), NEW_FEE);
+        assertEq(nfts.getFee(), NEW_FEE);
     }
 
     function testIfOwnerCanSetFeeAddress() public {
         vm.prank(OWNER);
         nfts.setFeeAddress(NEW_FEE_ADDRESS);
-        assertEq(nfts.feeAddress(), NEW_FEE_ADDRESS);
+        assertEq(nfts.getFeeAddress(), NEW_FEE_ADDRESS);
     }
 
     function testIfOwnerCanSetBatchLimit() public {
         vm.prank(OWNER);
         nfts.setBatchLimit(3);
-        assertEq(nfts.batchLimit(), 3);
+        assertEq(nfts.getBatchLimit(), 3);
     }
 
     function testIfOwnerCanSetMaxPerWallet() public {
         vm.prank(OWNER);
         nfts.setMaxPerWallet(11);
-        assertEq(nfts.maxPerWallet(), 11);
+        assertEq(nfts.getMaxPerWallet(), 11);
     }
 
     function testRevertWhenBatchLimitGreaterThankMaxPerWallet() public {
@@ -143,7 +143,7 @@ contract NFTContractTest is Test {
     }
 
     function testMintSingleNFT() public funded {
-        uint256 fee = nfts.fee();
+        uint256 fee = nfts.getFee();
         vm.prank(USER);
         token.approve(address(nfts), fee);
 
@@ -153,7 +153,7 @@ contract NFTContractTest is Test {
     }
 
     function testMintMultipleNFTs() public funded {
-        uint256 fee = 3 * nfts.fee();
+        uint256 fee = 3 * nfts.getFee();
         vm.prank(USER);
         token.approve(address(nfts), fee);
 
@@ -163,7 +163,7 @@ contract NFTContractTest is Test {
     }
 
     function testRetrieveTokenUri() public funded {
-        uint256 fee = nfts.fee();
+        uint256 fee = nfts.getFee();
         vm.prank(USER);
         token.approve(address(nfts), fee);
 
@@ -175,7 +175,7 @@ contract NFTContractTest is Test {
     }
 
     function testChargesCorrectAmount() public funded {
-        uint256 fee = 3 * nfts.fee();
+        uint256 fee = 3 * nfts.getFee();
         uint256 initialBalance = token.balanceOf(USER);
         uint256 expectedBalance = initialBalance - fee;
 
@@ -189,7 +189,7 @@ contract NFTContractTest is Test {
     }
 
     function testMintRevertsIfZero() public funded {
-        uint256 fee = nfts.fee();
+        uint256 fee = nfts.getFee();
 
         vm.prank(USER);
         token.approve(address(nfts), fee);
@@ -203,7 +203,7 @@ contract NFTContractTest is Test {
         vm.prank(OWNER);
         nfts.setBatchLimit(5);
 
-        uint256 fee = 6 * nfts.fee();
+        uint256 fee = 6 * nfts.getFee();
         vm.prank(USER);
         token.approve(address(nfts), fee);
 
@@ -213,7 +213,7 @@ contract NFTContractTest is Test {
     }
 
     function testMintRevertsIfExceedsMaxWalletLimit() public funded {
-        uint256 fee = 6 * nfts.fee();
+        uint256 fee = 6 * nfts.getFee();
         vm.prank(USER);
         token.approve(address(nfts), fee);
 
@@ -228,7 +228,7 @@ contract NFTContractTest is Test {
         vm.prank(OWNER);
         nfts.setBatchLimit(100);
 
-        uint256 fee = 100 * nfts.fee();
+        uint256 fee = 100 * nfts.getFee();
         for (uint256 index = 0; index < 10; index++) {
             vm.prank(OWNER);
             token.approve(address(nfts), fee);
@@ -237,7 +237,7 @@ contract NFTContractTest is Test {
             nfts.mint(100);
         }
 
-        fee = nfts.fee();
+        fee = nfts.getFee();
         vm.prank(USER);
         token.approve(address(nfts), fee);
 

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.20;
+pragma solidity ^0.8.20;
 
 import {Script, console} from "forge-std/Script.sol";
 import {HoldEarn} from "../src/HoldEarn.sol";
@@ -18,16 +18,16 @@ contract HelperConfig is Script {
     }
 
     constructor() {
-        if (block.chainid == 56) {
-            activeNetworkConfig = getBscMainnetConfig();
-        } else if (block.chainid == 97) {
-            activeNetworkConfig = getBscTestnetConfig();
+        if (block.chainid == 1) {
+            activeNetworkConfig = getMainnetConfig();
+        } else if (block.chainid == 11155111) {
+            activeNetworkConfig = getTestnetConfig();
         } else {
             activeNetworkConfig = getAnvilConfig();
         }
     }
 
-    function getBscTestnetConfig() public pure returns (NetworkConfig memory) {
+    function getTestnetConfig() public pure returns (NetworkConfig memory) {
         return NetworkConfig({
             initialOwner: 0xCbA52038BF0814bC586deE7C061D6cb8B203f8e1,
             feeAddress: 0xCbA52038BF0814bC586deE7C061D6cb8B203f8e1,
@@ -35,11 +35,11 @@ contract HelperConfig is Script {
         });
     }
 
-    function getBscMainnetConfig() public pure returns (NetworkConfig memory) {
+    function getMainnetConfig() public pure returns (NetworkConfig memory) {
         return NetworkConfig({
-            initialOwner: 0x7526553689E14F2D7E172713e1F232d8048cf613,
-            feeAddress: 0x9987605c8741d945098D7D6ba30bC41ACc1B821e,
-            tokenAddress: 0xdB238123939637D65a03E4b2b485650B4f9D91CB
+            initialOwner: 0x4671a210C4CF44C43dC5E44DAf68e64D46cdc703,
+            feeAddress: 0x0cf66382d52C2D6c1D095c536c16c203117E2B2f,
+            tokenAddress: 0x0b61C4f33BCdEF83359ab97673Cb5961c6435F4E
         });
     }
 

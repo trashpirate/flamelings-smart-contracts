@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.18;
+pragma solidity ^0.8.20;
 
 import {Test, console} from "forge-std/Test.sol";
-import {Venus} from "../../src/Venus.sol";
-import {DeployNFTContract} from "../../script/DeployNFTContract.s.sol";
+import {Flamelings} from "../../src/Flamelings.sol";
+import {DeployFlamelings} from "../../script/DeployFlamelings.s.sol";
 import {IERC20, ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {MintNfts, TransferNft, ApproveNft} from "../../script/UserInteractions.s.sol";
 
 contract UserInteractionsTest is Test {
-    Venus nftContract;
+    Flamelings nftContract;
     IERC20 token;
 
     address USER = makeAddr("user");
     address OWNER;
-    uint256 constant STARTING_BALANCE = 100_000_000_000 * 10 ** 9;
+    uint256 constant STARTING_BALANCE = 10_000_000 * 10 ** 18;
 
     modifier fundedAndApproved() {
         // fund user
@@ -26,9 +26,9 @@ contract UserInteractionsTest is Test {
     }
 
     function setUp() external {
-        DeployNFTContract deployment = new DeployNFTContract();
+        DeployFlamelings deployment = new DeployFlamelings();
         nftContract = deployment.run();
-        token = nftContract.paymentToken();
+        token = IERC20(nftContract.getPaymentToken());
         OWNER = nftContract.owner();
     }
 
