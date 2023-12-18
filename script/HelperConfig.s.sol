@@ -1,20 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.18;
+pragma solidity 0.8.20;
 
 import {Script, console} from "forge-std/Script.sol";
-import {CoinToken} from "../src/TasteNFT.sol";
+import {HoldEarn} from "../src/HoldEarn.sol";
 
 contract HelperConfig is Script {
-    // TASTE deployment arguments
-    string public constant NAME = "TasteNFT";
-    string public constant SYMBOL = "TASTE";
-    uint256 public constant DECIMALS = 9;
-    uint256 public constant SUPPLY = 1_000_000_000_000_000 * 10 ** 9;
-    uint256 public constant TAXFEE = 5;
-    uint256 public constant LPFEE = 5;
-    uint256 public constant MAXTXAMOUNT = 5000000000000000000000;
-    uint256 public constant MAXSELLAMOUNT = 50000000000;
-    address public constant ROUTERADDRESS = 0x10ED43C718714eb63d5aA57B78B54704E256024E;
+    // EARN deployment arguments
     address public constant TOKENOWNER = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266;
 
     // chain configurations
@@ -56,9 +47,7 @@ contract HelperConfig is Script {
         // Deploy mock contract
         vm.startBroadcast();
 
-        CoinToken token = new CoinToken(
-            NAME, SYMBOL, DECIMALS, SUPPLY, TAXFEE, LPFEE, MAXTXAMOUNT, MAXSELLAMOUNT, ROUTERADDRESS, TOKENOWNER
-        );
+        HoldEarn token = new HoldEarn(TOKENOWNER);
         vm.stopBroadcast();
         return NetworkConfig({
             initialOwner: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266,
