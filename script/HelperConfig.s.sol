@@ -31,7 +31,7 @@ contract HelperConfig is Script {
         return NetworkConfig({
             initialOwner: 0xCbA52038BF0814bC586deE7C061D6cb8B203f8e1,
             feeAddress: 0xCbA52038BF0814bC586deE7C061D6cb8B203f8e1,
-            tokenAddress: 0x855dA24D2Fc7eF7aAcf29b3d027Ec70ab11847df
+            tokenAddress: 0x09601E2bfA5b0101e0ba151541d95646B1eeE381
         });
     }
 
