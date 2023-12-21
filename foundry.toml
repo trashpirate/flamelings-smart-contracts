@@ -7,6 +7,7 @@ evm_version = "paris"
 optimizer = true
 optimizer_rounds = 200
 fs_permissions = [{ access = "read", path = "./broadcast" }]
+gas_reports = ["Flamelings"]
 
 # --chains--
 [rpc_endpoints]
@@ -19,7 +20,7 @@ localhost = "${RPC_LOCALHOST}"
 
 # --scans--
 [etherscan]
-mainnet = { key = "${ETHERSCAN_MAINNET_KEY}"}
+mainnet = { key = "${ETHERSCAN_MAINNET_KEY}", chain="1"}
 sepolia = { key = "${ETHERSCAN_MAINNET_KEY}", chain = "11155111"}
 goerli = { key = "${ETHERSCAN_MAINNET_KEY}", chain = "5" }
 bsc = { key = "${BSCSCAN_KEY}", chain = "56" }
